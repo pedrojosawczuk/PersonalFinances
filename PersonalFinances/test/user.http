@@ -1,0 +1,46 @@
+@URL=https://localhost:5001/api
+
+@JWT = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQiLCJlbWFpbCI6InBlZHJvQGdtYWlsLmNvbSIsIm5iZiI6MTY4NDE5NDcyOCwiZXhwIjoxNjg2Nzg2NzI4LCJpYXQiOjE2ODQxOTQ3Mjh9.sk6cgmg8OSBqJKa9KJnPYJbbNRyH2nwXxJp8IFF-eD4
+
+### Register a User
+POST {{URL}}/User/register
+Content-Type: application/json
+
+{
+	"name": "Pedro J de O",
+	"lastname": "Sawczuk",
+	"email": "pedro@gmail.com",
+	"password": "1234"
+}
+
+### Login (Generate Token)
+POST  {{URL}}/User/login
+Content-Type: application/json
+
+{
+	"email": "pedro@gmail.com",
+	"password": "1234"
+}
+
+
+### Get User by token
+GET  {{URL}}/User/verify
+Authorization: {{JWT}}
+
+
+### Atualizar um usuário
+PATCH {{URL}}/User/
+Content-Type: application/json
+Authorization: {{JWT}}
+
+{
+    "id": "4",
+    "name": "Juca",
+	"lastname": "Silva",
+    "email": "juca4@gmail.com",
+    "password": "1234"
+}
+
+### Deletar um usuário
+DELETE {{URL}}/User/
+Authorization: {{JWT}}

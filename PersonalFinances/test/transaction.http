@@ -1,0 +1,48 @@
+@URL=https://localhost:7174/api
+
+@JWT = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxIiwiZW1haWwiOiJvbGl2aWEubGVlQGdtYWlsLmNvbSIsIm5iZiI6MTY4MjgyMjMzNCwiZXhwIjoxNjg1NDE0MzM0LCJpYXQiOjE2ODI4MjIzMzR9.UpJY8iFw--HXsLKX4H0eIypYuDFUolxqBiqfc-egvNg
+
+### Add a Transaction
+POST {{URL}}/Transaction/
+Content-Type: application/json
+Authorization: {{JWT}}
+
+{
+    "id": 4,
+    "description": "Electric Bill",
+    "value": 5.0,
+    "date": "2023-04-10",
+    "fk_user": 1,
+    "fk_category": 3
+}
+
+### Get All Transactions
+GET {{URL}}/Transaction/
+Authorization: {{JWT}}
+
+### Update a Transaction
+PATCH {{URL}}/Transaction/
+Content-Type: application/json
+Authorization: {{JWT}}
+
+{
+    "id": 4,
+    "description": "Electric Bill",
+    "value": 5.0,
+    "date": "2023-04-10",
+    "fk_category": 3
+}
+
+### Delete a Transaction by Id
+DELETE {{URL}}/Transaction/4
+Authorization: {{JWT}}
+
+
+### Get All Transactions by category
+GET {{URL}}/Transaction/
+Content-Type: application/json
+Authorization: {{JWT}}
+
+{
+    "fk_category": 3
+}

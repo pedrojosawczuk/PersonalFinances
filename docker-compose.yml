@@ -1,0 +1,25 @@
+version: '3.2'
+
+services:
+  mariadb:
+    image: lscr.io/linuxserver/mariadb
+    container_name: mariadb
+    ports:
+      - 3306:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=toor
+      - MYSQL_DATABASE:finance
+
+  phpmyadmin:
+    image: lscr.io/linuxserver/phpmyadmin
+    container_name: phpmyadmin
+    ports:
+      - '8117:80'
+    depends_on:
+      - mariadb
+    environment:
+      - PMA_HOST=mariadb
+      - MYSQL_HOST=mariadb
+      - MYSQL_ROOT_PASSWORD=toor
+    links:
+      - mariadb
