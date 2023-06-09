@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PersonalFinances.Models;
@@ -5,122 +6,90 @@ namespace PersonalFinances.Models;
 [Table("tb_user")]
 public class UserModel
 {
+   private long? _userID;
+   private string? _name;
+   private string? _lastName;
+   private string? _email;
+   private string? _password;
+   private byte[]? _photo;
+
    [Column("id")]
-   public long? UserID { get; set; }
+   public long? UserID
+   {
+      get { return _userID; }
+      protected set
+      {
+         if (value == null)
+         {
+            throw new ArgumentException("UserID cannot be null.");
+         }
+         _userID = value;
+      }
+   }
 
    [Column("name")]
-   public string? Name { get; set; }
+   public string? Name
+   {
+      get { return _name; }
+      set
+      {
+         if (value == null)
+         {
+            throw new ArgumentException("Name cannot be null.");
+         }
+         _name = value;
+      }
+   }
 
    [Column("lastName")]
-   public string? LastName { get; set; }
+   public string? LastName
+   {
+      get { return _lastName; }
+      set
+      {
+         if (value == null)
+         {
+            throw new ArgumentException("LastName cannot be null.");
+         }
+         _lastName = value;
+      }
+   }
 
    [Column("email")]
-   public string? Email { get; set; }
+   public string? Email
+   {
+      get { return _email; }
+      set
+      {
+         if (value == null)
+         {
+            throw new ArgumentException("Email cannot be null.");
+         }
+         _email = value;
+      }
+   }
 
    [Column("password")]
-   public string? Password { get; set; }
+   public string? Password
+   {
+      get { return _password; }
+      set
+      {
+         if (value == null)
+         {
+            throw new ArgumentException("Password cannot be null.");
+         }
+         _password = value;
+      }
+   }
 
    [Column("photo")]
-   public byte[]? Photo { get; set; }
-   /*
-       [Column("created_at")]
-       public DateTime? CreatedAt { get; set; }
+   public byte[]? Photo
+   {
+      get { return _photo; }
+      set { _photo = value; }
+   }
 
-       [Column("updated_at")]
-       public DateTime? UpdatedAt { get; set; }
-       */
-   /*
-
-   [Column("name")]
-   private string? _name;
-
-   [Column("lastname")]
-   private string? _lastName;
-
-   [Column("email")]
-   private string? _email;
-
-   [Column("password")]
-   private string? _password;
-
-   [Column("photo")]
-   private byte[]? _photo;*/
-   /*
-       public UserModel(long userID, string name, string lastName, string email, string password, byte[] photo)
-       {
-           UserID = userID;
-           _name = name;
-           _lastName = lastName;
-           _email = email;
-           _password = password;
-           _photo = photo;
-       }
-       public UserModel(string name, string lastName, string email, string password)
-       {
-           _name = name;
-           _lastName = lastName;
-           _email = email;
-           _password = password;
-       }
-
-       [JsonConstructor]
-       public UserModel(string email, string password)
-       {
-           _email = email;
-           _password = password;
-       }
-
-       public string Name
-       {
-           get { return _name; }
-           set
-           {
-               if (value != null)
-                   _name = value;
-               else
-                   throw new ArgumentException("Name cannot be null.");
-           }
-       }
-       public string LastName
-       {
-           get { return _lastName; }
-           set
-           {
-               if (value != null)
-                   _lastName = value;
-               else
-                   throw new ArgumentException("Last name cannot be null.");
-           }
-       }
-       public string Email
-       {
-           get { return _email; }
-           set
-           {
-               if (value != null)
-                   _email = value;
-               else
-                   throw new ArgumentException("Email cannot be null.");
-           }
-       }
-       public string Password
-       {
-           get { return _password; }
-           set
-           {
-               if (value.Length > 8)
-                   _password = value;
-               else
-                   throw new ArgumentException("Password must be longer than 8 characters!");
-           }
-       }
-       public byte[]? Photo
-       {
-
-           get { return _photo; }
-           set { _photo = value; }
-       }
-   */
    public string FullName
    {
       get
@@ -128,5 +97,4 @@ public class UserModel
          return $"{Name} {LastName}";
       }
    }
-
 }
