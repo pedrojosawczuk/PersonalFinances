@@ -19,7 +19,7 @@ CREATE TABLE finances.tb_category (
     id BIGINT NOT NULL AUTO_INCREMENT,
     name VARCHAR(100) NOT NULL,
     description VARCHAR(255) NOT NULL,
-    type VARCHAR(1) DEFAULT 'D',
+    type VARCHAR(1) DEFAULT 'E',
     PRIMARY KEY (id)
 );
 
@@ -27,7 +27,7 @@ CREATE TABLE finances.tb_transaction (
     id BIGINT NOT NULL AUTO_INCREMENT,
     description VARCHAR(255) NOT NULL,
     value DOUBLE NOT NULL,
-    type VARCHAR(1) DEFAULT 'D',
+    type VARCHAR(1) DEFAULT 'E',
     date DATE NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -54,41 +54,41 @@ INSERT INTO finances.tb_user (name, lastName, email,  password)
 
 /* Add 11 Expenses tb_category */
 INSERT INTO finances.tb_category (name, description, type)
-    VALUES ('Housing', 'Rent/mortgage payments, utilities, repairs, and maintenance', 'D');
+    VALUES ('Housing', 'Rent/mortgage payments, utilities, repairs, and maintenance', 'E');
 INSERT INTO finances.tb_category (name, description, type)
-    VALUES ('Transportation', 'Car payments, gas, maintenance, and public transportation', 'D');
+    VALUES ('Transportation', 'Car payments, gas, maintenance, and public transportation', 'E');
 INSERT INTO finances.tb_category (name, description, type)
-    VALUES ('Food', 'Groceries and dining out expenses', 'D');
+    VALUES ('Food', 'Groceries and dining out expenses', 'E');
 INSERT INTO finances.tb_category (name, description, type)
-    VALUES ('Entertainment', 'Expenses for movies, concerts, and other leisure activities', 'D');
+    VALUES ('Entertainment', 'Expenses for movies, concerts, and other leisure activities', 'E');
 INSERT INTO finances.tb_category (name, description, type)
-    VALUES ('Health', 'Expenses for health insurance, doctor visits, and medication', 'D');
+    VALUES ('Health', 'Expenses for health insurance, doctor visits, and medication', 'E');
 INSERT INTO finances.tb_category (name, description, type)
-    VALUES ('Clothing', 'Expenses for clothing, shoes, and accessories', 'D');
+    VALUES ('Clothing', 'Expenses for clothing, shoes, and accessories', 'E');
 INSERT INTO finances.tb_category (name, description, type)
-    VALUES ('Education', 'Expenses for tuition, books, and other education-related costs', 'D');
+    VALUES ('Education', 'Expenses for tuition, books, and other education-related costs', 'E');
 INSERT INTO finances.tb_category (name, description, type)
-    VALUES ('Debt', 'Payments for loans, credit cards, and other debt', 'D');
+    VALUES ('Debt', 'Payments for loans, credit cards, and other debt', 'E');
 INSERT INTO finances.tb_category (name, description, type)
-    VALUES ('Taxes', 'Income taxes, property taxes, and other taxes', 'D');
+    VALUES ('Taxes', 'Income taxes, property taxes, and other taxes', 'E');
 INSERT INTO finances.tb_category (name, description, type)
-    VALUES ('Travel', 'Expenses for flights, hotels, and other travel-related costs', 'D');
+    VALUES ('Travel', 'Expenses for flights, hotels, and other travel-related costs', 'E');
 INSERT INTO finances.tb_category (name, description, type)
-    VALUES ('Others', 'Expenses that do not fit into any other category', 'D');
+    VALUES ('Others', 'Expenses that do not fit into any other category', 'E');
 
-/* Add 7 Earnings tb_category */
+/* Add 7 Income tb_category */
 INSERT INTO finances.tb_category (name, description, type)
-    VALUES ('Personal Income', 'Salary, commissions, bonuses, awards, tips, and other forms of compensation that an individual receives from their work.', 'R');
+    VALUES ('Personal Income', 'Salary, commissions, bonuses, awards, tips, and other forms of compensation that an individual receives from their work.', 'I');
 INSERT INTO finances.tb_category (name, description, type)
-    VALUES ('Business Income', 'Net profit, revenue, return on investment (ROI), and other financial metrics related to a company’s performance.', 'R');
+    VALUES ('Business Income', 'Net profit, revenue, return on investment (ROI), and other financial metrics related to a company’s performance.', 'I');
 INSERT INTO finances.tb_category (name, description, type)
-    VALUES ('Investment Income', 'Interest, dividends, capital gains, and other forms of income generated from financial investments.', 'R');
+    VALUES ('Investment Income', 'Interest, dividends, capital gains, and other forms of income generated from financial investments.', 'I');
 INSERT INTO finances.tb_category (name, description, type)
-    VALUES ('Passive Income', 'Rental income, royalties from intellectual property, online advertising income, and other forms of income generated without the need for active work.', 'R');
+    VALUES ('Passive Income', 'Rental income, royalties from intellectual property, online advertising income, and other forms of income generated without the need for active work.', 'I');
 INSERT INTO finances.tb_category (name, description, type)
-    VALUES ('Gambling/Lottery Winnings', 'Winnings from gambling and lotteries.', 'R');
+    VALUES ('Gambling/Lottery Winnings', 'Winnings from gambling and lotteries.', 'I');
 INSERT INTO finances.tb_category (name, description, type)
-    VALUES ('Other', 'Income that does not fit into any of the categories.', 'R');
+    VALUES ('Other', 'Income that does not fit into any of the categories.', 'I');
 
 /* Add 7 Expenses Transactions tb_transaction */
 INSERT INTO finances.tb_transaction (description, value, date, fk_user, fk_category)
@@ -108,50 +108,50 @@ INSERT INTO finances.tb_transaction (description, value, date, fk_user, fk_categ
 
 /* Add 3 Income Transactions tb_transaction */
 INSERT INTO finances.tb_transaction (description, value, type, date, fk_user, fk_category)
-    VALUES ('Salary', 5000.0, 'R', '2023-04-07', 1, 12);
+    VALUES ('Salary', 5000.0, 'I', '2023-04-07', 1, 12);
 INSERT INTO finances.tb_transaction (description, value, type, date, fk_user, fk_category)
-    VALUES ('Rental Income', 800.0, 'R', '2023-04-15', 2, 15);
+    VALUES ('Rental Income', 800.0, 'I', '2023-04-15', 2, 15);
 INSERT INTO finances.tb_transaction (description, value, type, date, fk_user, fk_category)
-    VALUES ('Investment Dividend', 150.0, 'R', '2023-03-05', 3, 14);
+    VALUES ('Investment Dividend', 150.0, 'I', '2023-03-05', 3, 14);
 
 /*
 INSERT INTO finances.tb_category (name, description, type)
-    VALUES ('Moradia', 'Aluguel, hipoteca, condomínio, serviços públicos, reparos e manutenção da casa.', 'D');
+    VALUES ('Moradia', 'Aluguel, hipoteca, condomínio, serviços públicos, reparos e manutenção da casa.', 'E');
 INSERT INTO finances.tb_category (name, description, type)
-    VALUES ('Transporte', 'Combustível, manutenção do veículo, seguro, impostos, transporte público.', 'D');
+    VALUES ('Transporte', 'Combustível, manutenção do veículo, seguro, impostos, transporte público.', 'E');
 INSERT INTO finances.tb_category (name, description, type)
-    VALUES ('Alimentação', 'Mercearia, restaurantes, cafeterias, lanches.', 'D');
+    VALUES ('Alimentação', 'Mercearia, restaurantes, cafeterias, lanches.', 'E');
 INSERT INTO finances.tb_category (name, description, type)
-    VALUES ('Entretenimento', 'Cinema, teatro, shows, esportes, hobbies.', 'D');
+    VALUES ('Entretenimento', 'Cinema, teatro, shows, esportes, hobbies.', 'E');
 INSERT INTO finances.tb_category (name, description, type)
-    VALUES ('Saúde', 'Seguro saúde, consultas médicas, medicamentos, tratamentos.', 'D');
+    VALUES ('Saúde', 'Seguro saúde, consultas médicas, medicamentos, tratamentos.', 'E');
 INSERT INTO finances.tb_category (name, description, type)
-    VALUES ('Vestuário', 'Roupas, sapatos, acessórios.', 'D');
+    VALUES ('Vestuário', 'Roupas, sapatos, acessórios.', 'E');
 INSERT INTO finances.tb_category (name, description, type)
-    VALUES ('Educação', 'Mensalidades escolares, livros, cursos, treinamentos.', 'D');
+    VALUES ('Educação', 'Mensalidades escolares, livros, cursos, treinamentos.', 'E');
 INSERT INTO finances.tb_category (name, description, type)
-    VALUES ('Dívidas', 'Pagamentos de empréstimos, cartões de crédito, juros.', 'D');
+    VALUES ('Dívidas', 'Pagamentos de empréstimos, cartões de crédito, juros.', 'E');
 INSERT INTO finances.tb_category (name, description, type)
-    VALUES ('Impostos', 'Imposto de renda, IPTU, IPVA, taxas.', 'D');
+    VALUES ('Impostos', 'Imposto de renda, IPTU, IPVA, taxas.', 'E');
 INSERT INTO finances.tb_category (name, description, type)
-    VALUES ('Viagem', 'Passagens aéreas, hospedagem, transporte, alimentação.', 'D');
+    VALUES ('Viagem', 'Passagens aéreas, hospedagem, transporte, alimentação.', 'E');
 INSERT INTO finances.tb_category (name, description, type)
-    VALUES ('Outros', 'Gastos que não se encaixam em nenhuma outra categoria.', 'D');
+    VALUES ('Outros', 'Gastos que não se encaixam em nenhuma outra categoria.', 'E');
 */
 
 /*
 INSERT INTO finances.tb_category (name, description, type)
-    VALUES ('Ganhos Pessoais', 'Salário, comissões, bônus, prêmios, gorjetas e outras formas de remuneração que uma pessoa recebe em seu trabalho.', 'R');
+    VALUES ('Ganhos Pessoais', 'Salário, comissões, bônus, prêmios, gorjetas e outras formas de remuneração que uma pessoa recebe em seu trabalho.', 'I');
 INSERT INTO finances.tb_category (name, description, type)
-    VALUES ('Ganhos Empresariais', 'Lucro líquido, receita, retorno sobre o investimento (ROI) e outras métricas financeiras relacionadas ao desempenho da empresa.', 'R');
+    VALUES ('Ganhos Empresariais', 'Lucro líquido, receita, retorno sobre o investimento (ROI) e outras métricas financeiras relacionadas ao desempenho da empresa.', 'I');
 INSERT INTO finances.tb_category (name, description, type)
-    VALUES ('Ganhos de Investimento', 'Juros, dividendos, ganhos de capital e outras formas de renda geradas a partir de investimentos financeiros.', 'R');
+    VALUES ('Ganhos de Investimento', 'Juros, dividendos, ganhos de capital e outras formas de renda geradas a partir de investimentos financeiros.', 'I');
 INSERT INTO finances.tb_category (name, description, type)
-    VALUES ('Ganhos Passivos', 'Renda de aluguel, royalties de propriedade intelectual, renda de publicidade online e outras formas de renda geradas sem a necessidade de trabalho ativo.', 'R');
+    VALUES ('Ganhos Passivos', 'Renda de aluguel, royalties de propriedade intelectual, renda de publicidade online e outras formas de renda geradas sem a necessidade de trabalho ativo.', 'I');
 INSERT INTO finances.tb_category (name, description, type)
-    VALUES ('Ganhos de Jogo/Loteria', 'Ganhos provenientes de jogos de azar e loterias.', 'R');
+    VALUES ('Ganhos de Jogo/Loteria', 'Ganhos provenientes de jogos de azar e loterias.', 'I');
 INSERT INTO finances.tb_category (name, description, type)
-    VALUES ('Outras Fontes de Renda', 'Heranças, doações, vendas de bens pessoais e outras formas de renda que não se encaixam em outras categorias.', 'R');
+    VALUES ('Outras Fontes de Renda', 'Heranças, doações, vendas de bens pessoais e outras formas de renda que não se encaixam em outras categorias.', 'I');
 INSERT INTO finances.tb_category (name, description, type)
-    VALUES ('Outros', 'Receitas que não se enquadram em nenhuma das categorias.', 'R');
+    VALUES ('Outros', 'Receitas que não se enquadram em nenhuma das categorias.', 'I');
 */
