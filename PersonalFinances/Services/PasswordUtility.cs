@@ -2,7 +2,7 @@ using System;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace PersonalFinances.Models;
+namespace PersonalFinances.Services;
 
 public class PasswordUtility
 {
