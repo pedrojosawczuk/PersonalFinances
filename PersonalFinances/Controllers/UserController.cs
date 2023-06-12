@@ -9,6 +9,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using DotNetEnv;
 
+using System.ComponentModel.DataAnnotations;
+
 using PersonalFinances.DataContext;
 using PersonalFinances.Services;
 using PersonalFinances.Models;
@@ -57,10 +59,14 @@ public class UserController : ControllerBase
          }
          return Unauthorized(new { error = "No token!" });
       }
+      catch (ArgumentException ex)
+      {
+         return BadRequest(new { error = ex.Message });
+      }
       catch (Exception ex)
       {
          Console.WriteLine($"[Server] Error: {ex.Message}");
-         return BadRequest(new { error = ex.Message });
+         return StatusCode(500, new { error = ex.Message });
       }
    }
 
@@ -73,49 +79,58 @@ public class UserController : ControllerBase
          {
             Env.Load();
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(Environment.GetEnvironmentVariable("SECRET_KEY") ?? throw new NullReferenceException());
+            var key = Encoding.ASCII.GetBytes(Environment.GetEnvironmentVariable("SECRET_KEY") ?? throw new ArgumentException("Error retrieving environment variables."));
 
-            var dbUser = await context.Users.FirstOrDefaultAsync(u => u.Email == user.Email);
-            if (user != null && user.Password != null && dbUser != null && dbUser.Password != null && dbUser.Email != null && dbUser.UserID != null)
+            var hashedPassword = PasswordUtility.HashPassword(user.Password);
+            var dbUser = await context.Users.FirstOrDefaultAsync(u => u.Email == user.Email && u.Password == hashedPassword) ?? throw new InvalidOperationException("Email/Password is wrong!");
+            /*
+                        if (user.Password != null && dbUser.Password != null)
+                           if (!PasswordUtility.VerifyPassword(user.Password, dbUser.Password))
+                           {
+                              throw new InvalidOperationException("Email/Password is wrong!");
+                           }*/
+
+            var tokenDescriptor = new SecurityTokenDescriptor
             {
-               if (!PasswordUtility.VerifyPassword(user.Password, dbUser.Password))
-                  return Unauthorized(new { error = "Email/Password is wrong!" });
-
-               var tokenDescriptor = new SecurityTokenDescriptor
+               Subject = new ClaimsIdentity(new[]
                {
-                  Subject = new ClaimsIdentity(new[]
-                  {
-                     new Claim("id", dbUser.UserID.ToString() ?? throw new ArgumentNullException()),
-                     new Claim("email", dbUser.Email),
+                     new Claim("id", dbUser.UserID.ToString() ?? throw new ArgumentException("Null id")),
+                     new Claim("email", dbUser.Email ?? throw new ArgumentException("Null Email")),
                   }),
-                  Expires = DateTime.UtcNow.AddDays(30),
-                  SigningCredentials = new SigningCredentials(
-                     new SymmetricSecurityKey(key),
-                     SecurityAlgorithms.HmacSha256Signature)
-               };
+               Expires = DateTime.UtcNow.AddDays(30),
+               SigningCredentials = new SigningCredentials(
+                  new SymmetricSecurityKey(key),
+                  SecurityAlgorithms.HmacSha256Signature)
+            };
 
-               var token = tokenHandler.CreateToken(tokenDescriptor);
-               var tokenString = tokenHandler.WriteToken(token);
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            var tokenString = tokenHandler.WriteToken(token);
 
-               var res = new
-               {
-                  id = dbUser.UserID,
-                  name = dbUser.Name,
-                  lastName = dbUser.LastName,
-                  email = dbUser.Email,
-                  photo = dbUser.Photo
-               };
+            var res = new
+            {
+               id = dbUser.UserID,
+               name = dbUser.Name,
+               lastName = dbUser.LastName,
+               email = dbUser.Email,
+               photo = dbUser.Photo
+            };
 
-               Response.Headers.Add("Authorization", tokenString);
-               return Ok(new { user = res });
-            }
-            return BadRequest(new { error = "Failed to retrieve the user!" });
+            Response.Headers.Add("Authorization", tokenString);
+            return Ok(new { user = res });
          }
+      }
+      catch (InvalidOperationException ex)
+      {
+         return BadRequest(new { error = ex.Message });
+      }
+      catch (ArgumentException ex)
+      {
+         return BadRequest(new { error = ex.Message });
       }
       catch (Exception ex)
       {
          Console.WriteLine($"[Server] Error: {ex.Message}");
-         return BadRequest(new { error = ex.Message });
+         return StatusCode(500, new { error = ex.Message });
       }
    }
 
@@ -129,47 +144,46 @@ public class UserController : ControllerBase
          await stream.ReadAsync(buffer, 0, buffer.Length);
          var json = Encoding.UTF8.GetString(buffer);
          var user = JsonConvert.DeserializeObject<UserModel>(json);
-         if (user != null && user.Password != null)
+
+         using (var context = new EFDataContext())
          {
-            using (var context = new EFDataContext())
+            var existingUser = await context.Users.FirstOrDefaultAsync(u => u.Email == user.Email);
+
+            if (existingUser != null)
             {
-               var existingUser = await context.Users.FirstOrDefaultAsync(u => u.Email == user.Email);
-
-               if (existingUser == null)
-               {
-                  string hashedPassword = PasswordUtility.HashPassword(user.Password);
-
-                  var newUser = new UserModel
-                  {
-                     Name = user.Name,
-                     LastName = user.LastName,
-                     Email = user.Email,
-                     Password = hashedPassword
-                  };
-
-                  context.Users.Add(newUser);
-                  await context.SaveChangesAsync();
-
-                  var res = new
-                  {
-                     id = newUser.UserID,
-                     name = newUser.Name,
-                     lastName = newUser.LastName,
-                     email = newUser.Email,
-                     photo = newUser.Photo
-                  };
-
-                  return Ok(res);
-               }
-               return BadRequest(new { error = "User is already registered!" });
+               throw new InvalidOperationException("User is already registered!");
             }
+            string hashedPassword = PasswordUtility.HashPassword(user.Password);
+
+            var newUser = new UserModel(user.Name, user.LastName, user.Email, hashedPassword);
+
+            context.Users.Add(newUser);
+            await context.SaveChangesAsync();
+
+            var res = new
+            {
+               id = newUser.UserID,
+               name = newUser.Name,
+               lastName = newUser.LastName,
+               email = newUser.Email,
+               photo = newUser.Photo
+            };
+
+            return Ok(new { user = res });
          }
-         return BadRequest(new { error = "Unable to extract user!" });
+      }
+      catch (InvalidOperationException ex)
+      {
+         return BadRequest(new { error = ex.Message });
+      }
+      catch (ArgumentException ex)
+      {
+         return BadRequest(new { error = ex.Message });
       }
       catch (Exception ex)
       {
          Console.WriteLine($"[Server] Error: {ex.Message}");
-         return BadRequest(new { error = ex.Message });
+         return StatusCode(500, new { error = ex.Message });
       }
    }
 
@@ -210,19 +224,23 @@ public class UserController : ControllerBase
                         photo = dbUser.Photo
                      };
 
-                     return Ok(res);
+                     return Ok(new { user = res });
                   }
-                  return NotFound(new { error = "No user found." });
+                  return NotFound(new { error = "No User found." });
                }
             }
             return Unauthorized(new { error = "Invalid Token!" });
          }
          return Unauthorized(new { error = "No token!" });
       }
+      catch (ArgumentException ex)
+      {
+         return BadRequest(new { error = ex.Message });
+      }
       catch (Exception ex)
       {
          Console.WriteLine($"[Server] Error: {ex.Message}");
-         return BadRequest(new { error = ex.Message });
+         return StatusCode(500, new { error = ex.Message });
       }
    }
 
@@ -257,10 +275,14 @@ public class UserController : ControllerBase
          }
          return Unauthorized(new { error = "No token!" });
       }
+      catch (ArgumentException ex)
+      {
+         return BadRequest(new { error = ex.Message });
+      }
       catch (Exception ex)
       {
          Console.WriteLine($"[Server] Error: {ex.Message}");
-         return BadRequest(new { error = ex.Message });
+         return StatusCode(500, new { error = ex.Message });
       }
    }
 }

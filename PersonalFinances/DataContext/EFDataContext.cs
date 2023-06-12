@@ -27,13 +27,13 @@ public class EFDataContext : DbContext
          optionsBuilder.UseMySql(
              Environment.GetEnvironmentVariable("SQL_CONNECT"), Microsoft.EntityFrameworkCore.ServerVersion.Parse("10.6.12-mariadb"));
       }
-      catch (ArgumentNullException)
+      catch (ArgumentException)
       {
-         throw new ArgumentNullException();
+         throw new ArgumentException("Error retrieving environment variables.");
       }
-      catch (Exception)
+      catch (Exception ex)
       {
-         throw new Exception();
+         throw new Exception(ex.Message);
       }
    }
    protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -48,9 +48,9 @@ public class EFDataContext : DbContext
          modelBuilder.Entity<CategoryModel>().HasKey(c => c.CategoryID);
          modelBuilder.Entity<TransactionModel>().HasKey(t => t.TransactionID);
       }
-      catch (Exception)
+      catch (Exception ex)
       {
-         throw new Exception();
+         throw new Exception(ex.Message);
       }
    }
 }

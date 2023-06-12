@@ -8,6 +8,11 @@ public class PasswordUtility
 {
    public static string HashPassword(string password)
    {
+      if (string.IsNullOrEmpty(password))
+      {
+         throw new ArgumentException("Password cannot be null.");
+      }
+
       using (SHA512 sha512 = SHA512.Create())
       {
          // Convert the password string to byte array
@@ -29,6 +34,16 @@ public class PasswordUtility
 
    public static bool VerifyPassword(string password, string hashedPassword)
    {
+      if (string.IsNullOrEmpty(password))
+      {
+         throw new ArgumentException("Password cannot be null.");
+      }
+      else if (string.IsNullOrEmpty(hashedPassword))
+      {
+         Console.WriteLine("DB can't retrieve value for password.");
+         throw new Exception("Internal Server Error");
+      }
+
       string hashedInput = HashPassword(password);
       return string.Equals(hashedInput, hashedPassword, StringComparison.OrdinalIgnoreCase);
    }
