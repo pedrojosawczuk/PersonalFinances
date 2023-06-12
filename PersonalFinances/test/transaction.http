@@ -1,6 +1,6 @@
 @URL=https://localhost:5001/api
 
-@JWT = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjUiLCJlbWFpbCI6InBlZHJvQGdtYWlsLmNvbSIsIm5iZiI6MTY4NjI1ODM1MSwiZXhwIjoxNjg4ODUwMzUxLCJpYXQiOjE2ODYyNTgzNTF9.pMF0lEpfVXGVFPL0d5d70EMCO8FzTwMCtBJBFz1AUEo
+@JWT = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQiLCJlbWFpbCI6InBlZHJvQGdtYWlsLmNvbSIsIm5iZiI6MTY4NjUwMzU0OCwiZXhwIjoxNjg5MDk1NTQ4LCJpYXQiOjE2ODY1MDM1NDh9.u2FJuJ983lopBIzZ6CdhBqa9dSI-xoXlfohl9zY-pgA
 
 ### Add a Transaction
 POST {{URL}}/Transaction/
@@ -8,11 +8,11 @@ Content-Type: application/json
 Authorization: {{JWT}}
 
 {
-    "description": "Electric Bill",
-    "value": 5.0,
-    "type": "D",
-    "date": "2023-04-10",
-    "fkCategory": 3
+   "description": "Electric Bill",
+   "value": 5.0,
+   "type": "I",
+   "date": "2023-04-10",
+   "fkCategory": 3
 }
 
 ### Get All Transactions
@@ -20,13 +20,19 @@ GET {{URL}}/Transaction/
 Authorization: {{JWT}}
 
 
-### Get All Earnings
-GET {{URL}}/Transaction/Earnings
+### Get All Income
+GET {{URL}}/Transaction/Income
 Authorization: {{JWT}}
 
 
 ### Get All Expenses
 GET {{URL}}/Transaction/Expenses
+Authorization: {{JWT}}
+
+
+### Get All Transactions by category
+GET {{URL}}/Transaction/Category/3
+Content-Type: application/json
 Authorization: {{JWT}}
 
 
@@ -36,25 +42,15 @@ Content-Type: application/json
 Authorization: {{JWT}}
 
 {
-    "transactionID": 11,
-    "description": "Electric Bill2",
-    "value": 15.0,
-    "type": "D",
-    "date": "2023-04-11",
-    "fkCategory": 3
+   "transactionID": 12,
+   "description": "Electric Bill2",
+   "value": 15.0,
+   "type": "I",
+   "date": "2023-04-11",
+   "fkCategory": 3
 }
 
 
 ### Delete a Transaction by Id
-DELETE {{URL}}/Transaction/4
+DELETE {{URL}}/Transaction/12
 Authorization: {{JWT}}
-
-
-### Get All Transactions by category
-GET {{URL}}/Transaction/
-Content-Type: application/json
-Authorization: {{JWT}}
-
-{
-    "fkCategory": 3
-}

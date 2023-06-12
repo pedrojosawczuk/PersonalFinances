@@ -1,0 +1,19 @@
+@URL=https://localhost:5001/api
+
+@JWT = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQiLCJlbWFpbCI6InBlZHJvQGdtYWlsLmNvbSIsIm5iZiI6MTY4NjUwMzU0OCwiZXhwIjoxNjg5MDk1NTQ4LCJpYXQiOjE2ODY1MDM1NDh9.u2FJuJ983lopBIzZ6CdhBqa9dSI-xoXlfohl9zY-pgA
+
+
+### Get All Categories
+GET {{URL}}/Categories/
+Authorization: {{JWT}}
+
+
+### Get All Expenses Categories
+GET {{URL}}/Categories/Expenses
+Authorization: {{JWT}}
+
+
+### Get All Income Categories
+GET {{URL}}/Categories/Income
+Authorization: {{JWT}}
+
