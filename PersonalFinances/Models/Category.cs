@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations.Schema;
+using Newtonsoft.Json;
 
 namespace PersonalFinances.Models;
 
@@ -10,31 +11,43 @@ public class CategoryModel
    private string _description = string.Empty;
    private string _type = string.Empty;
 
+   public CategoryModel(long categoryID, string name, string description, string type)
+   {
+      CategoryID = categoryID;
+      Name = name;
+      Description = description;
+      Type = type;
+   }
+
    [Column("id")]
+   [JsonProperty("categoryID")]
    public long CategoryID
    {
       get { return _categoryID; }
-      protected set { _categoryID = value; }
+      set { _categoryID = value; }
    }
 
    [Column("name")]
+   [JsonProperty("name")]
    public string Name
    {
       get { return _name; }
-      protected set { _name = value; }
+      set { _name = value; }
    }
 
    [Column("description")]
+   [JsonProperty("description")]
    public string Description
    {
       get { return _description; }
-      protected set { _description = value; }
+      set { _description = value; }
    }
 
    [Column("type")]
+   [JsonProperty("type")]
    public string Type
    {
       get { return _type; }
-      protected set { _type = value; }
+      set { _type = value; }
    }
 }
