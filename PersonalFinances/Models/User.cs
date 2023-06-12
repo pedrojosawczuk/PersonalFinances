@@ -1,5 +1,5 @@
-using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using Newtonsoft.Json;
 
 namespace PersonalFinances.Models;
 
@@ -13,13 +13,40 @@ public class UserModel
    private string? _password;
    private byte[]? _photo;
 
+   public UserModel()
+   {
+      // Parameterless constructor
+   }
+   public UserModel(long userID, string name, string lastName, string email, string password, byte[]? photo)
+   {
+      UserID = userID;
+      Name = name;
+      LastName = lastName;
+      Email = email;
+      Password = password;
+      Photo = photo;
+   }
+   public UserModel(string name, string lastName, string email, string password)
+   {
+      Name = name;
+      LastName = lastName;
+      Email = email;
+      Password = password;
+   }
+   public UserModel(string email, string password)
+   {
+      Email = email;
+      Password = password;
+   }
+
    [Column("id")]
+   [JsonProperty("userID")]
    public long? UserID
    {
       get { return _userID; }
-      protected set
+      set
       {
-         if (value == null)
+         if (value == 0)
          {
             throw new ArgumentException("UserID cannot be null.");
          }
@@ -28,12 +55,13 @@ public class UserModel
    }
 
    [Column("name")]
+   [JsonProperty("name")]
    public string? Name
    {
       get { return _name; }
       set
       {
-         if (value == null)
+         if (string.IsNullOrEmpty(value))
          {
             throw new ArgumentException("Name cannot be null.");
          }
@@ -42,12 +70,13 @@ public class UserModel
    }
 
    [Column("lastName")]
+   [JsonProperty("lastName")]
    public string? LastName
    {
       get { return _lastName; }
       set
       {
-         if (value == null)
+         if (string.IsNullOrEmpty(value))
          {
             throw new ArgumentException("LastName cannot be null.");
          }
@@ -56,12 +85,13 @@ public class UserModel
    }
 
    [Column("email")]
+   [JsonProperty("email")]
    public string? Email
    {
       get { return _email; }
       set
       {
-         if (value == null)
+         if (string.IsNullOrEmpty(value))
          {
             throw new ArgumentException("Email cannot be null.");
          }
@@ -70,12 +100,13 @@ public class UserModel
    }
 
    [Column("password")]
+   [JsonProperty("password")]
    public string? Password
    {
       get { return _password; }
       set
       {
-         if (value == null)
+         if (string.IsNullOrEmpty(value))
          {
             throw new ArgumentException("Password cannot be null.");
          }
@@ -84,6 +115,7 @@ public class UserModel
    }
 
    [Column("photo")]
+   [JsonProperty("photo")]
    public byte[]? Photo
    {
       get { return _photo; }
