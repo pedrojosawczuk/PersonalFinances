@@ -5,6 +5,7 @@ namespace PersonalFinances.Services;
 public interface ITransactionService
 {
    List<TransactionModel> ListTransactions(string token);
+   TransactionModel GetOneTransaction(string id, string token);
    List<TransactionModel> ListIncome(string token);
    List<TransactionModel> ListExpenses(string token);
    List<TransactionModel> ListByCategory(string id, string token);

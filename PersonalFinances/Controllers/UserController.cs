@@ -7,6 +7,7 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
+using System.Text.RegularExpressions;
 using DotNetEnv;
 
 using System.ComponentModel.DataAnnotations;
@@ -82,7 +83,14 @@ public class UserController : ControllerBase
             var key = Encoding.ASCII.GetBytes(Environment.GetEnvironmentVariable("SECRET_KEY") ?? throw new ArgumentException("Error retrieving environment variables."));
 
             var hashedPassword = PasswordUtility.HashPassword(user.Password);
-            var dbUser = await context.Users.FirstOrDefaultAsync(u => u.Email == user.Email && u.Password == hashedPassword) ?? throw new InvalidOperationException("Email/Password is wrong!");
+            var dbUser = await context.Users.FirstAsync(u => u.Email == user.Email && u.Password == hashedPassword) ?? throw new InvalidOperationException("Email/Password is wrong!");
+
+            string pattern = @"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$";
+
+            if (!Regex.IsMatch(user.Email, pattern))
+            {
+               throw new InvalidOperationException("Email invalid!");
+            }
             /*
                         if (user.Password != null && dbUser.Password != null)
                            if (!PasswordUtility.VerifyPassword(user.Password, dbUser.Password))
@@ -108,6 +116,12 @@ public class UserController : ControllerBase
 
             var res = new
             {
+               token = tokenString
+            };
+
+/*
+            var res = new
+            {
                id = dbUser.UserID,
                name = dbUser.Name,
                lastName = dbUser.LastName,
@@ -115,8 +129,8 @@ public class UserController : ControllerBase
                photo = dbUser.Photo
             };
 
-            Response.Headers.Add("Authorization", tokenString);
-            return Ok(new { user = res });
+            Response.Headers.Add("Authorization", tokenString);*/
+            return Ok(new { res });
          }
       }
       catch (InvalidOperationException ex)
@@ -147,6 +161,13 @@ public class UserController : ControllerBase
 
          using (var context = new EFDataContext())
          {
+            string pattern = @"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$";
+
+            if (!Regex.IsMatch(user.Email, pattern))
+            {
+               throw new InvalidOperationException("Email invalid!");
+            }
+
             var existingUser = await context.Users.FirstOrDefaultAsync(u => u.Email == user.Email);
 
             if (existingUser != null)

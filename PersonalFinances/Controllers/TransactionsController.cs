@@ -43,6 +43,58 @@ public class TransactionController : ControllerBase
                         type = e.Type,
                         category = e.FkCategory
                      })
+                     .OrderByDescending(e => e.date)
+                     .ToListAsync();
+
+                  if (transactions == null)
+                  {
+                     return Ok(new { message = "No transactions" });
+                  }
+                  return Ok(new { transaction = transactions });
+               }
+            }
+            return Unauthorized(new { error = "Invalid Token!" });
+         }
+         return Unauthorized(new { error = "No token!" });
+      }
+      catch (ArgumentException ex)
+      {
+         return BadRequest(new { error = ex.Message });
+      }
+      catch (Exception ex)
+      {
+         Console.WriteLine($"[Server] Error: {ex.Message}");
+         return StatusCode(500, new { error = ex.Message });
+      }
+   }
+   [HttpGet("{transactionId}")]
+   public async Task<ActionResult<IEnumerable<object>>> GetOneTransaction(long transactionId)
+   {
+      try
+      {
+         if (HttpContext.Request.Headers["Authorization"] != String.Empty)
+         {
+            var token = HttpContext.Request.Headers["Authorization"];
+
+            var jwtToken = new JwtSecurityToken(token);
+            var payload = jwtToken.Payload;
+
+            if (payload.TryGetValue("id", out object? idObj) && long.TryParse(idObj.ToString(), out long id))
+            {
+               using (var context = new EFDataContext())
+               {
+                  TransactionModel transaction = new TransactionModel();
+                  var transactions = await context.Transactions
+                     .Where(e => e.FkUser == id && e.TransactionID == transactionId)
+                     .Select(e => new
+                     {
+                        id = e.TransactionID,
+                        description = e.Description,
+                        value = e.Value,
+                        date = e.Date,
+                        type = e.Type,
+                        category = e.FkCategory
+                     })
                      .ToListAsync();
 
                   if (transactions == null)
@@ -95,6 +147,7 @@ public class TransactionController : ControllerBase
                         type = e.Type,
                         category = e.FkCategory
                      })
+                     .OrderByDescending(e => e.date)
                      .ToListAsync();
 
                   if (transactions == null)
@@ -146,6 +199,7 @@ public class TransactionController : ControllerBase
                         type = e.Type,
                         category = e.FkCategory
                      })
+                     .OrderByDescending(e => e.date)
                      .ToListAsync();
 
                   if (transactions == null)
