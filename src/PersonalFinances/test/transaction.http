@@ -1,6 +1,6 @@
-@URL=https://localhost:5001/api
+@URL=http://localhost:5220/api
 
-@JWT = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQiLCJlbWFpbCI6InBlZHJvQGdtYWlsLmNvbSIsIm5iZiI6MTY4NjUwMzU0OCwiZXhwIjoxNjg5MDk1NTQ4LCJpYXQiOjE2ODY1MDM1NDh9.u2FJuJ983lopBIzZ6CdhBqa9dSI-xoXlfohl9zY-pgA
+@JWT = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQiLCJlbWFpbCI6InBlZHJvQGdtYWlsLmNvbSIsIm5iZiI6MTcxOTYxNjkxNiwiZXhwIjoxNzIyMjA4OTE2LCJpYXQiOjE3MTk2MTY5MTZ9.RHRFhsQ3JOuO2DIuCV850oFWkB_tX1SO-s2KbRaN63E
 
 ### Add a Transaction
 POST {{URL}}/Transaction/
@@ -12,7 +12,7 @@ Authorization: {{JWT}}
    "value": 5.0,
    "type": "I",
    "date": "2023-04-10",
-   "fkCategory": 3
+   "categoryID": 3
 }
 
 ### Get All Transactions
@@ -20,7 +20,7 @@ GET {{URL}}/Transaction/
 Authorization: {{JWT}}
 
 ### Get One Transactions
-GET {{URL}}/Transaction/9
+GET {{URL}}/Transaction/11
 Authorization: {{JWT}}
 
 
