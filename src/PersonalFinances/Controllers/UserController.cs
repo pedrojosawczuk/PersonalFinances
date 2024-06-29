@@ -1,6 +1,4 @@
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.Text;
 using System.IdentityModel.Tokens.Jwt;
@@ -8,9 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.Text.RegularExpressions;
-using DotNetEnv;
-
-using System.ComponentModel.DataAnnotations;
 
 using PersonalFinances.DataContext;
 using PersonalFinances.Services;
@@ -22,6 +17,7 @@ namespace PersonalFinances.Controllers;
 [ApiController]
 public class UserController : ControllerBase
 {
+   // private readonly IConfiguration? _configuration;
    [HttpGet("verify")]
    public async Task<IActionResult> Verify()
    {
@@ -51,18 +47,14 @@ public class UserController : ControllerBase
                         photo = dbUser.Photo
                      };
 
-                     return Ok(new { user = res });
+                     return Ok();
                   }
-                  return NotFound(new { error = "No user found." });
+                  return Unauthorized();
                }
             }
-            return Unauthorized(new { error = "Invalid Token!" });
+            return Unauthorized();
          }
-         return Unauthorized(new { error = "No token!" });
-      }
-      catch (ArgumentException ex)
-      {
-         return BadRequest(new { error = ex.Message });
+         return Unauthorized();
       }
       catch (Exception ex)
       {
@@ -78,25 +70,18 @@ public class UserController : ControllerBase
       {
          using (var context = new EFDataContext())
          {
-            Env.Load();
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(Environment.GetEnvironmentVariable("SECRET_KEY") ?? throw new ArgumentException("Error retrieving environment variables."));
+            var key = Encoding.ASCII.GetBytes("cafecafecafecafecafecafecafecafecafecafecafecafecafecafecafecafecafecafecafecafecafecafecafecafe");
 
-            var hashedPassword = PasswordUtility.HashPassword(user.Password);
+            var hashedPassword = PasswordUtility.HashPassword(user.Password!);
             var dbUser = await context.Users.FirstAsync(u => u.Email == user.Email && u.Password == hashedPassword) ?? throw new InvalidOperationException("Email/Password is wrong!");
 
             string pattern = @"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$";
 
-            if (!Regex.IsMatch(user.Email, pattern))
+            if (!Regex.IsMatch(user.Email!, pattern))
             {
                throw new InvalidOperationException("Email invalid!");
             }
-            /*
-                        if (user.Password != null && dbUser.Password != null)
-                           if (!PasswordUtility.VerifyPassword(user.Password, dbUser.Password))
-                           {
-                              throw new InvalidOperationException("Email/Password is wrong!");
-                           }*/
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
@@ -119,27 +104,8 @@ public class UserController : ControllerBase
                token = tokenString
             };
 
-/*
-            var res = new
-            {
-               id = dbUser.UserID,
-               name = dbUser.Name,
-               lastName = dbUser.LastName,
-               email = dbUser.Email,
-               photo = dbUser.Photo
-            };
-
-            Response.Headers.Add("Authorization", tokenString);*/
-            return Ok(new { res });
+            return Ok(res);
          }
-      }
-      catch (InvalidOperationException ex)
-      {
-         return BadRequest(new { error = ex.Message });
-      }
-      catch (ArgumentException ex)
-      {
-         return BadRequest(new { error = ex.Message });
       }
       catch (Exception ex)
       {
@@ -163,7 +129,7 @@ public class UserController : ControllerBase
          {
             string pattern = @"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$";
 
-            if (!Regex.IsMatch(user.Email, pattern))
+            if (!Regex.IsMatch(user!.Email!, pattern))
             {
                throw new InvalidOperationException("Email invalid!");
             }
@@ -174,11 +140,17 @@ public class UserController : ControllerBase
             {
                throw new InvalidOperationException("User is already registered!");
             }
-            string hashedPassword = PasswordUtility.HashPassword(user.Password);
+            string hashedPassword = PasswordUtility.HashPassword(user.Password!);
 
-            var newUser = new UserModel(user.Name, user.LastName, user.Email, hashedPassword);
+            var newUser = new UserModel
+            {
+               Name = user.Name,
+               LastName = user.LastName,
+               Email = user.Email,
+               Password = hashedPassword
+            };
 
-            context.Users.Add(newUser);
+            await context.Users.AddAsync(newUser);
             await context.SaveChangesAsync();
 
             var res = new
@@ -190,16 +162,8 @@ public class UserController : ControllerBase
                photo = newUser.Photo
             };
 
-            return Ok(new { user = res });
+            return Ok(res);
          }
-      }
-      catch (InvalidOperationException ex)
-      {
-         return BadRequest(new { error = ex.Message });
-      }
-      catch (ArgumentException ex)
-      {
-         return BadRequest(new { error = ex.Message });
       }
       catch (Exception ex)
       {
@@ -245,18 +209,14 @@ public class UserController : ControllerBase
                         photo = dbUser.Photo
                      };
 
-                     return Ok(new { user = res });
+                     return Ok(res);
                   }
-                  return NotFound(new { error = "No User found." });
+                  return Unauthorized();
                }
             }
-            return Unauthorized(new { error = "Invalid Token!" });
+            return Unauthorized();
          }
-         return Unauthorized(new { error = "No token!" });
-      }
-      catch (ArgumentException ex)
-      {
-         return BadRequest(new { error = ex.Message });
+         return Unauthorized();
       }
       catch (Exception ex)
       {
@@ -289,16 +249,12 @@ public class UserController : ControllerBase
                      await context.SaveChangesAsync();
                      return Ok();
                   }
-                  return NotFound(new { error = "No user found." });
+                  return Unauthorized();
                }
             }
-            return Unauthorized(new { error = "Invalid Token!" });
+            return Unauthorized();
          }
-         return Unauthorized(new { error = "No token!" });
-      }
-      catch (ArgumentException ex)
-      {
-         return BadRequest(new { error = ex.Message });
+         return Unauthorized();
       }
       catch (Exception ex)
       {

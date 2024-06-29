@@ -1,8 +1,4 @@
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
-using System.Text;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.EntityFrameworkCore;
 using PersonalFinances.DataContext;
@@ -34,20 +30,16 @@ public class CategoriesController : ControllerBase
                   List<CategoryModel> allCategories = new List<CategoryModel>();
                   var categories = await context.Categories.ToListAsync();
 
-                  if (categories == null)
+                  if (categories.Count == 0)
                   {
-                     return Ok(new { message = "No Categories" });
+                     return NoContent();
                   }
-                  return Ok(new { categories = categories });
+                  return Ok(categories);
                }
             }
-            return Unauthorized(new { error = "Invalid Token!" });
+            return Unauthorized();
          }
-         return Unauthorized(new { error = "No token!" });
-      }
-      catch (ArgumentException ex)
-      {
-         return BadRequest(new { error = ex.Message });
+         return Unauthorized();
       }
       catch (Exception ex)
       {
@@ -84,20 +76,16 @@ public class CategoriesController : ControllerBase
                      })
                      .ToListAsync();
 
-                  if (incomeCategories == null)
+                  if (incomeCategories.Count == 0)
                   {
-                     return Ok(new { message = "No Income Categories" });
+                     return NoContent();
                   }
-                  return Ok(new { categories = incomeCategories });
+                  return Ok(incomeCategories);
                }
             }
-            return Unauthorized(new { error = "Invalid Token!" });
+            return Unauthorized();
          }
-         return Unauthorized(new { error = "No token!" });
-      }
-      catch (ArgumentException ex)
-      {
-         return BadRequest(new { error = ex.Message });
+         return Unauthorized();
       }
       catch (Exception ex)
       {
@@ -133,20 +121,16 @@ public class CategoriesController : ControllerBase
                      })
                      .ToListAsync();
 
-                  if (expensesCategories == null)
+                  if (expensesCategories.Count == 0)
                   {
-                     return Ok(new { message = "No Expense Categories" });
+                     return NoContent();
                   }
-                  return Ok(new { categories = expensesCategories });
+                  return Ok(expensesCategories);
                }
             }
-            return Unauthorized(new { error = "Invalid Token!" });
+            return Unauthorized();
          }
-         return Unauthorized(new { error = "No token!" });
-      }
-      catch (ArgumentException ex)
-      {
-         return BadRequest(new { error = ex.Message });
+         return Unauthorized();
       }
       catch (Exception ex)
       {

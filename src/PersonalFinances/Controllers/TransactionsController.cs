@@ -1,8 +1,4 @@
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
-using System.Text;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.EntityFrameworkCore;
 using PersonalFinances.DataContext;
@@ -33,7 +29,7 @@ public class TransactionController : ControllerBase
                {
                   List<TransactionModel> allTransactions = new List<TransactionModel>();
                   var transactions = await context.Transactions
-                     .Where(e => e.FkUser == id)
+                     .Where(e => e.User!.UserID == id)
                      .Select(e => new
                      {
                         id = e.TransactionID,
@@ -41,25 +37,21 @@ public class TransactionController : ControllerBase
                         value = e.Value,
                         date = e.Date,
                         type = e.Type,
-                        category = e.FkCategory
+                        category = e.Category
                      })
                      .OrderByDescending(e => e.date)
                      .ToListAsync();
 
-                  if (transactions == null)
+                  if (transactions.Count == 0)
                   {
-                     return Ok(new { message = "No transactions" });
+                     return NoContent();
                   }
-                  return Ok(new { transaction = transactions });
+                  return Ok(transactions);
                }
             }
-            return Unauthorized(new { error = "Invalid Token!" });
+            return Unauthorized();
          }
-         return Unauthorized(new { error = "No token!" });
-      }
-      catch (ArgumentException ex)
-      {
-         return BadRequest(new { error = ex.Message });
+         return Unauthorized();
       }
       catch (Exception ex)
       {
@@ -85,7 +77,7 @@ public class TransactionController : ControllerBase
                {
                   TransactionModel transaction = new TransactionModel();
                   var transactions = await context.Transactions
-                     .Where(e => e.FkUser == id && e.TransactionID == transactionId)
+                     .Where(e => e.User!.UserID == id && e.TransactionID == transactionId)
                      .Select(e => new
                      {
                         id = e.TransactionID,
@@ -93,24 +85,20 @@ public class TransactionController : ControllerBase
                         value = e.Value,
                         date = e.Date,
                         type = e.Type,
-                        category = e.FkCategory
+                        category = e.Category
                      })
                      .ToListAsync();
 
-                  if (transactions == null)
+                  if (transactions.Count == 0)
                   {
-                     return Ok(new { message = "No transactions" });
+                     return NoContent();
                   }
-                  return Ok(new { transaction = transactions });
+                  return Ok(transactions);
                }
             }
-            return Unauthorized(new { error = "Invalid Token!" });
+            return Unauthorized();
          }
-         return Unauthorized(new { error = "No token!" });
-      }
-      catch (ArgumentException ex)
-      {
-         return BadRequest(new { error = ex.Message });
+         return Unauthorized();
       }
       catch (Exception ex)
       {
@@ -137,7 +125,7 @@ public class TransactionController : ControllerBase
                {
                   List<TransactionModel> allTransactions = new List<TransactionModel>();
                   var transactions = await context.Transactions
-                     .Where(e => e.FkUser == id && e.Type == "I")
+                     .Where(e => e.User!.UserID == id && e.Type == "I")
                      .Select(e => new
                      {
                         id = e.TransactionID,
@@ -145,25 +133,21 @@ public class TransactionController : ControllerBase
                         value = e.Value,
                         date = e.Date,
                         type = e.Type,
-                        category = e.FkCategory
+                        category = e.Category
                      })
                      .OrderByDescending(e => e.date)
                      .ToListAsync();
 
-                  if (transactions == null)
+                  if (transactions.Count == 0)
                   {
-                     return Ok(new { message = "No Income" });
+                     return NoContent();
                   }
-                  return Ok(new { transaction = transactions });
+                  return Ok(transactions);
                }
             }
-            return Unauthorized(new { error = "Invalid Token!" });
+            return Unauthorized();
          }
-         return Unauthorized(new { error = "No token!" });
-      }
-      catch (ArgumentException ex)
-      {
-         return BadRequest(new { error = ex.Message });
+         return Unauthorized();
       }
       catch (Exception ex)
       {
@@ -189,7 +173,7 @@ public class TransactionController : ControllerBase
                {
                   List<TransactionModel> allTransactions = new List<TransactionModel>();
                   var transactions = await context.Transactions
-                     .Where(e => e.FkUser == id && e.Type == "E")
+                     .Where(e => e.User!.UserID == id && e.Type == "E")
                      .Select(e => new
                      {
                         id = e.TransactionID,
@@ -197,25 +181,21 @@ public class TransactionController : ControllerBase
                         value = e.Value,
                         date = e.Date,
                         type = e.Type,
-                        category = e.FkCategory
+                        category = e.Category
                      })
                      .OrderByDescending(e => e.date)
                      .ToListAsync();
 
-                  if (transactions == null)
+                  if (transactions.Count == 0)
                   {
-                     return Ok(new { message = "No Expenses" });
+                     return NoContent();
                   }
-                  return Ok(new { transaction = transactions });
+                  return Ok(transactions);
                }
             }
-            return Unauthorized(new { error = "Invalid Token!" });
+            return Unauthorized();
          }
-         return Unauthorized(new { error = "No token!" });
-      }
-      catch (ArgumentException ex)
-      {
-         return BadRequest(new { error = ex.Message });
+         return Unauthorized();
       }
       catch (Exception ex)
       {
@@ -241,7 +221,7 @@ public class TransactionController : ControllerBase
                {
                   List<TransactionModel> allTransactions = new List<TransactionModel>();
                   var transactions = await context.Transactions
-                     .Where(e => e.FkUser == id && e.FkCategory == categoryId)
+                     .Where(e => e.User!.UserID == id && e.Category!.CategoryID == categoryId)
                      .Select(e => new
                      {
                         id = e.TransactionID,
@@ -249,24 +229,20 @@ public class TransactionController : ControllerBase
                         value = e.Value,
                         date = e.Date,
                         type = e.Type,
-                        category = e.FkCategory
+                        category = e.Category
                      })
                      .ToListAsync();
 
-                  if (transactions == null)
+                  if (transactions.Count == 0)
                   {
-                     return Ok(new { message = "No Transaction" });
+                     return NoContent();
                   }
-                  return Ok(new { transaction = transactions });
+                  return Ok(transactions);
                }
             }
-            return Unauthorized(new { error = "Invalid Token!" });
+            return Unauthorized();
          }
-         return Unauthorized(new { error = "No token!" });
-      }
-      catch (ArgumentException ex)
-      {
-         return BadRequest(new { error = ex.Message });
+         return Unauthorized();
       }
       catch (Exception ex)
       {
@@ -292,32 +268,33 @@ public class TransactionController : ControllerBase
                using (var context = new EFDataContext())
                {
                   var dbUser = await context.Users.FirstOrDefaultAsync(u => u.UserID == id);
-                  if (dbUser != null)
+                  var dbCategory = await context.Categories.FirstOrDefaultAsync(c => c.CategoryID == transaction.CategoryID);
+
+                  if (dbUser != null && dbCategory != null)
                   {
-                     var newTransaction = new TransactionModel(
-                        transaction.Description,
-                        transaction.Value,
-                        transaction.Type,
-                        transaction.Date,
-                        id,
-                        transaction.FkCategory
-                     );
+                     var newTransaction = new TransactionModel
+                     {
+                        Description = transaction.Description,
+                        Value = transaction.Value,
+                        Type = transaction.Type,
+                        Date = transaction.Date,
+                        User = dbUser,
+                        UserID = dbUser.UserID,
+                        Category = dbCategory,
+                        CategoryID = dbCategory.CategoryID,
+                     };
 
                      await context.Transactions.AddAsync(newTransaction);
                      await context.SaveChangesAsync();
 
-                     return Ok(new { transaction = newTransaction });
+                     return Ok(newTransaction);
                   }
-                  return BadRequest(new { error = "Failed to retrieve the user!" });
+                  return BadRequest();
                }
             }
-            return Unauthorized(new { error = "Invalid Token!" });
+            return Unauthorized();
          }
-         return Unauthorized(new { error = "No token!" });
-      }
-      catch (ArgumentException ex)
-      {
-         return BadRequest(new { error = ex.Message });
+         return Unauthorized();
       }
       catch (Exception ex)
       {
@@ -344,29 +321,25 @@ public class TransactionController : ControllerBase
                {
                   var dbTransaction = await context.Transactions.FirstOrDefaultAsync(t => t.TransactionID == updatedTransaction.TransactionID);
 
-                  if (dbTransaction != null && dbTransaction.FkUser == id)
+                  if (dbTransaction != null && dbTransaction.User!.UserID == id)
                   {
                      dbTransaction.TransactionID = updatedTransaction.TransactionID;
                      dbTransaction.Description = updatedTransaction.Description;
                      dbTransaction.Value = updatedTransaction.Value;
                      dbTransaction.Type = updatedTransaction.Type;
                      dbTransaction.Date = updatedTransaction.Date;
-                     dbTransaction.FkCategory = updatedTransaction.FkCategory;
+                     dbTransaction.Category = updatedTransaction.Category;
 
                      await context.SaveChangesAsync();
 
-                     return Ok(new { transaction = dbTransaction });
+                     return Ok(dbTransaction);
                   }
-                  return NotFound(new { error = "No Transaction found." });
+                  return NotFound();
                }
             }
-            return Unauthorized(new { error = "Invalid Token!" });
+            return Unauthorized();
          }
-         return BadRequest(new { error = "No token!" });
-      }
-      catch (ArgumentException ex)
-      {
-         return BadRequest(new { error = ex.Message });
+         return BadRequest();
       }
       catch (Exception ex)
       {
@@ -393,22 +366,19 @@ public class TransactionController : ControllerBase
                {
                   var dbTransaction = await context.Transactions.FirstOrDefaultAsync(t => t.TransactionID == transactionId);
 
-                  if (dbTransaction != null && dbTransaction.FkUser == id)
+                  if (dbTransaction != null && dbTransaction.User!.UserID == id)
                   {
                      context.Transactions.Remove(dbTransaction);
                      await context.SaveChangesAsync();
+
                      return Ok();
                   }
-                  return NotFound(new { error = "No Transaction found." });
+                  return NotFound();
                }
             }
-            return Unauthorized(new { error = "Invalid Token!" });
+            return Unauthorized();
          }
-         return BadRequest(new { error = "No token!" });
-      }
-      catch (ArgumentException ex)
-      {
-         return BadRequest(new { error = ex.Message });
+         return BadRequest();
       }
       catch (Exception ex)
       {
