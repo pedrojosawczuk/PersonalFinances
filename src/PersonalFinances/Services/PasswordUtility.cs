@@ -1,4 +1,3 @@
-using System;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -15,13 +14,9 @@ public class PasswordUtility
 
       using (SHA512 sha512 = SHA512.Create())
       {
-         // Convert the password string to byte array
          byte[] passwordBytes = Encoding.UTF8.GetBytes(password);
-
-         // Compute the hash value of the password bytes
          byte[] hashBytes = sha512.ComputeHash(passwordBytes);
 
-         // Convert the hashed bytes to a hexadecimal string
          StringBuilder sb = new StringBuilder();
          for (int i = 0; i < hashBytes.Length; i++)
          {

@@ -1,35 +1,26 @@
 using Microsoft.EntityFrameworkCore;
-using Pomelo.EntityFrameworkCore.MySql;
 using PersonalFinances.Models;
-using DotNetEnv;
 
 namespace PersonalFinances.DataContext;
 
 public class EFDataContext : DbContext
 {
+   // private readonly IConfiguration _configuration;
+   private const string connectionString = "Server=localhost;Port=3306;Database=finances;User=root;Password=toor";
    public DbSet<UserModel> Users { get; set; }
    public DbSet<CategoryModel> Categories { get; set; }
    public DbSet<TransactionModel> Transactions { get; set; }
 
-   public EFDataContext()
-   {
-      Users = Set<UserModel>();
-      Categories = Set<CategoryModel>();
-      Transactions = Set<TransactionModel>();
-   }
    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
    {
       try
       {
          base.OnConfiguring(optionsBuilder);
 
-         Env.Load();
-         optionsBuilder.UseMySql(
-             Environment.GetEnvironmentVariable("SQL_CONNECT"), Microsoft.EntityFrameworkCore.ServerVersion.Parse("10.6.12-mariadb"));
-      }
-      catch (ArgumentException)
-      {
-         throw new ArgumentException("Error retrieving environment variables.");
+         optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
+        .LogTo(Console.WriteLine, LogLevel.Information)
+        .EnableSensitiveDataLogging()
+        .EnableDetailedErrors();
       }
       catch (Exception ex)
       {
@@ -40,13 +31,59 @@ public class EFDataContext : DbContext
    {
       try
       {
-         modelBuilder.Entity<UserModel>().ToTable("tb_user");
-         modelBuilder.Entity<CategoryModel>().ToTable("tb_category");
-         modelBuilder.Entity<TransactionModel>().ToTable("tb_transaction");
+         modelBuilder.Entity<UserModel>(entity =>
+         {
+            entity.ToTable("tb_user");
+            entity.HasKey(e => e.UserID);
+            entity.Property(e => e.UserID).HasColumnName("id");
+            entity.Property(e => e.Name).HasColumnName("name");
+            entity.Property(e => e.LastName).HasColumnName("lastName");
+            entity.Property(e => e.Email).HasColumnName("email");
+            entity.Property(e => e.Password).HasColumnName("password");
+            entity.Property(e => e.Photo).HasColumnName("photo");
+            entity.HasMany(e => e.Transactions)
+                .WithOne(t => t.User)
+                .HasForeignKey(t => t.UserID)
+                .OnDelete(DeleteBehavior.Cascade);
+         });
 
-         modelBuilder.Entity<UserModel>().HasKey(t => t.UserID);
-         modelBuilder.Entity<CategoryModel>().HasKey(c => c.CategoryID);
-         modelBuilder.Entity<TransactionModel>().HasKey(t => t.TransactionID);
+         modelBuilder.Entity<CategoryModel>(entity =>
+         {
+            entity.ToTable("tb_category");
+            entity.HasKey(e => e.CategoryID);
+            entity.Property(e => e.CategoryID).HasColumnName("id");
+            entity.Property(e => e.Name).HasColumnName("name");
+            entity.Property(e => e.Description).HasColumnName("description");
+            entity.Property(e => e.Type).HasColumnName("type");
+         });
+
+         modelBuilder.Entity<TransactionModel>(entity =>
+         {
+            entity.ToTable("tb_transaction");
+            entity.HasKey(e => e.TransactionID);
+            entity.Property(e => e.TransactionID).HasColumnName("id");
+            entity.Property(e => e.Description).HasColumnName("description");
+            entity.Property(e => e.Value).HasColumnName("value");
+            entity.Property(e => e.Type).HasColumnName("type");
+            entity.Property(e => e.Date).HasColumnName("date");
+            entity.Property(e => e.CreatedAt).HasColumnName("created_at");
+            entity.Property(e => e.UpdatedAt).HasColumnName("updated_at");
+
+            entity.Property(e => e.UserID).HasColumnName("fk_user");
+            entity.Property(e => e.CategoryID).HasColumnName("fk_category");
+
+            entity.HasOne(e => e.User)
+                .WithMany(u => u.Transactions)
+                .HasForeignKey(e => e.UserID)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(e => e.Category)
+                .WithMany(c => c.Transactions)
+                .HasForeignKey(e => e.CategoryID)
+                .OnDelete(DeleteBehavior.Restrict);
+         });
+
+         base.OnModelCreating(modelBuilder);
       }
       catch (Exception ex)
       {
