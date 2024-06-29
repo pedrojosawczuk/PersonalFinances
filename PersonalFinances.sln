@@ -3,26 +3,34 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PersonalFinances", "PersonalFinances\PersonalFinances.csproj", "{476B6617-617E-48D3-B75D-7F3C4B49594A}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{AFC80AC5-28AA-4BB9-9A68-696186810325}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PersonalFinances.Tests", "PersonalFinances.Tests\PersonalFinances.Tests.csproj", "{3D549D2D-A84B-4B5A-AD70-80CA26927E0A}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{6BF9A09E-4320-4906-9FE5-385DE82AA4B0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PersonalFinances.UnitTests", "tests\PersonalFinances.UnitTests\PersonalFinances.UnitTests.csproj", "{CF60FDC8-EEF4-4C82-B325-B3A2C5319F57}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PersonalFinances", "src\PersonalFinances\PersonalFinances.csproj", "{A858557A-67C7-435D-A299-DA2304C9C64A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CF60FDC8-EEF4-4C82-B325-B3A2C5319F57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF60FDC8-EEF4-4C82-B325-B3A2C5319F57}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF60FDC8-EEF4-4C82-B325-B3A2C5319F57}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF60FDC8-EEF4-4C82-B325-B3A2C5319F57}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A858557A-67C7-435D-A299-DA2304C9C64A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A858557A-67C7-435D-A299-DA2304C9C64A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A858557A-67C7-435D-A299-DA2304C9C64A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A858557A-67C7-435D-A299-DA2304C9C64A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
-	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{476B6617-617E-48D3-B75D-7F3C4B49594A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{476B6617-617E-48D3-B75D-7F3C4B49594A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{476B6617-617E-48D3-B75D-7F3C4B49594A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{476B6617-617E-48D3-B75D-7F3C4B49594A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3D549D2D-A84B-4B5A-AD70-80CA26927E0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3D549D2D-A84B-4B5A-AD70-80CA26927E0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3D549D2D-A84B-4B5A-AD70-80CA26927E0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3D549D2D-A84B-4B5A-AD70-80CA26927E0A}.Release|Any CPU.Build.0 = Release|Any CPU
+	GlobalSection(NestedProjects) = preSolution
+		{CF60FDC8-EEF4-4C82-B325-B3A2C5319F57} = {6BF9A09E-4320-4906-9FE5-385DE82AA4B0}
+		{A858557A-67C7-435D-A299-DA2304C9C64A} = {AFC80AC5-28AA-4BB9-9A68-696186810325}
 	EndGlobalSection
 EndGlobal
