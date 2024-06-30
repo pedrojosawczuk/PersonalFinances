@@ -7,7 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{AFC80AC5-28A
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{6BF9A09E-4320-4906-9FE5-385DE82AA4B0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PersonalFinances.UnitTests", "tests\PersonalFinances.UnitTests\PersonalFinances.UnitTests.csproj", "{CF60FDC8-EEF4-4C82-B325-B3A2C5319F57}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "tests\UnitTests\UnitTests.csproj", "{CF60FDC8-EEF4-4C82-B325-B3A2C5319F57}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PersonalFinances", "src\PersonalFinances\PersonalFinances.csproj", "{A858557A-67C7-435D-A299-DA2304C9C64A}"
 EndProject

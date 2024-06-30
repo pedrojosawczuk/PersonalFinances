@@ -16,7 +16,7 @@ public class CategoriesController : ControllerBase
    }
 
    [HttpGet]
-   public async Task<ActionResult<IEnumerable<CategoryModel>>> ListAllCategories()
+   public async Task<ActionResult<List<CategoryModel>>> ListAllCategories()
    {
       try
       {
@@ -37,7 +37,7 @@ public class CategoriesController : ControllerBase
    }
 
    [HttpGet("income")]
-   public async Task<ActionResult<IEnumerable<CategoryModel>>> ListAllIncomeCategories()
+   public async Task<ActionResult<List<CategoryModel>>> ListAllIncomeCategories()
    {
       try
       {
@@ -58,7 +58,7 @@ public class CategoriesController : ControllerBase
    }
 
    [HttpGet("expenses")]
-   public async Task<ActionResult<IEnumerable<CategoryModel>>> ListAllExpensesCategories()
+   public async Task<ActionResult<List<CategoryModel>>> ListAllExpensesCategories()
    {
       try
       {
