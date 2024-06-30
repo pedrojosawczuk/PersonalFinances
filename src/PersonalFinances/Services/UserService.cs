@@ -23,10 +23,22 @@ namespace PersonalFinances.Services
          return await _context.Users.FirstOrDefaultAsync(u => u.UserID == id);
       }
 
+      public async Task<UserModel?> GetUserByEmail(string email)
+      {
+         return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+      }
+
       public async Task<UserModel?> AuthenticateUser(string email, string password)
       {
          var hashedPassword = PasswordUtility.HashPassword(password);
          return await _context.Users.FirstOrDefaultAsync(u => u.Email == email && u.Password == hashedPassword);
+      }
+
+      public async Task RegisterUser(UserModel user)
+      {
+         user.Password = PasswordUtility.HashPassword(user.Password!);
+         _context.Users.Add(user);
+         await _context.SaveChangesAsync();
       }
 
       public async Task SaveChangesAsync()

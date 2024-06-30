@@ -79,6 +79,29 @@ namespace PersonalFinances.Controllers
          }
       }
 
+      [HttpPost("register")]
+      public async Task<ActionResult> Register([FromBody] UserModel newUser)
+      {
+         try
+         {
+            if (!_userService.IsEmailValid(newUser.Email!))
+               return BadRequest("Email invalid!");
+
+            var existingUser = await _userService.GetUserByEmail(newUser.Email!);
+            if (existingUser != null)
+               return Conflict("Email already registered!");
+
+            await _userService.RegisterUser(newUser);
+
+            return Ok(new { message = "User registered successfully!" });
+         }
+         catch (Exception ex)
+         {
+            Console.WriteLine($"[Server] Error: {ex.Message}");
+            return StatusCode(500, new { error = ex.Message });
+         }
+      }
+
       [HttpPatch()]
       public async Task<ActionResult<UserModel>> UpdateUser([FromBody] UserModel updatedUser)
       {
@@ -145,7 +168,7 @@ namespace PersonalFinances.Controllers
 
                if (dbUser != null)
                {
-                  _userService.DeleteUser(dbUser);
+                  await _userService.DeleteUser(dbUser);
                   await _userService.SaveChangesAsync();
                   return Ok();
                }
