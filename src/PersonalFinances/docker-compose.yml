@@ -1,25 +1,25 @@
 version: '3.2'
 
 services:
-  pf_mariadb:
-    image: lscr.io/linuxserver/mariadb
-    container_name: pf_mariadb
-    ports:
-      - 3306:3306
-    environment:
-      - MYSQL_ROOT_PASSWORD=toor
-      - MYSQL_DATABASE:finances
+	pf_mariadb:
+		image: lscr.io/linuxserver/mariadb
+		container_name: pf_mariadb
+		ports:
+			- 3306:3306
+		environment:
+			- MYSQL_ROOT_PASSWORD=toor
+			- MYSQL_DATABASE:finances
 
-  pf_phpmyadmin:
-    image: lscr.io/linuxserver/phpmyadmin
-    container_name: pf_phpmyadmin
-    ports:
-      - '8117:80'
-    depends_on:
-      - pf_mariadb
-    environment:
-      - PMA_HOST=pf_mariadb
-      - MYSQL_HOST=pf_mariadb
-      - MYSQL_ROOT_PASSWORD=toor
-    links:
-      - pf_mariadb
+	pf_phpmyadmin:
+		image: lscr.io/linuxserver/phpmyadmin
+		container_name: pf_phpmyadmin
+		ports:
+			- '8117:80'
+		depends_on:
+			- pf_mariadb
+		environment:
+			- PMA_HOST=pf_mariadb
+			- MYSQL_HOST=pf_mariadb
+			- MYSQL_ROOT_PASSWORD=toor
+		links:
+			- pf_mariadb
