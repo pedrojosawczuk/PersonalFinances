@@ -1,11 +1,14 @@
 using PersonalFinances.Models;
+using System.Threading.Tasks;
 
 namespace PersonalFinances.Services;
 
 public interface IUserService
 {
-   UserModel LoginUser(string email, string password);
-   void RegisterUser(UserModel user);
-   void UpdateUser(string id, UserModel user);
-   void RemoveUser(string id);
+   Task<UserModel?> GetUserById(long id);
+   Task<UserModel?> AuthenticateUser(string email, string password);
+   Task SaveChangesAsync();
+   Task DeleteUser(UserModel user);
+   string GenerateJwtToken(UserModel user);
+   bool IsEmailValid(string email);
 }
