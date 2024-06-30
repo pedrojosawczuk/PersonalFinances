@@ -5,8 +5,13 @@ namespace PersonalFinances.DataContext;
 
 public class EFDataContext : DbContext
 {
-   // private readonly IConfiguration _configuration;
-   private const string connectionString = "Server=localhost;Port=3306;Database=finances;User=root;Password=toor";
+   private readonly bool _useInMemoryDatabase;
+
+   public EFDataContext(DbContextOptions<EFDataContext> options, bool useInMemoryDatabase = false) : base(options)
+   {
+      _useInMemoryDatabase = useInMemoryDatabase;
+   }
+
    public DbSet<UserModel> Users { get; set; }
    public DbSet<CategoryModel> Categories { get; set; }
    public DbSet<TransactionModel> Transactions { get; set; }
@@ -15,12 +20,21 @@ public class EFDataContext : DbContext
    {
       try
       {
-         base.OnConfiguring(optionsBuilder);
-
-         optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
-        .LogTo(Console.WriteLine, LogLevel.Information)
-        .EnableSensitiveDataLogging()
-        .EnableDetailedErrors();
+         if (!optionsBuilder.IsConfigured)
+         {
+            if (!_useInMemoryDatabase)
+            {
+               var connectionString = "Server=localhost;Port=3306;Database=finances;User=root;Password=toor";
+               optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
+                   .LogTo(Console.WriteLine, LogLevel.Information)
+                   .EnableSensitiveDataLogging()
+                   .EnableDetailedErrors();
+            }
+            else
+            {
+               optionsBuilder.UseInMemoryDatabase("TestDatabase");
+            }
+         }
       }
       catch (Exception ex)
       {
@@ -87,7 +101,6 @@ public class EFDataContext : DbContext
       }
       catch (Exception ex)
       {
-         throw new Exception(ex.Message);
       }
    }
 }

@@ -1,4 +1,12 @@
+using PersonalFinances.DataContext;
+using PersonalFinances.Services;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<EFDataContext>();
+
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 
 builder.Services.AddControllers();
 

@@ -11,6 +11,12 @@ namespace PersonalFinances.Controllers;
 [ApiController]
 public class TransactionController : ControllerBase
 {
+   private readonly EFDataContext _context;
+   public TransactionController(EFDataContext context)
+   {
+      _context = context;
+   }
+
    [HttpGet]
    public async Task<ActionResult<IEnumerable<object>>> ListTransactions()
    {
@@ -25,29 +31,26 @@ public class TransactionController : ControllerBase
 
             if (payload.TryGetValue("id", out object? idObj) && long.TryParse(idObj.ToString(), out long id))
             {
-               using (var context = new EFDataContext())
-               {
-                  List<TransactionModel> allTransactions = new List<TransactionModel>();
-                  var transactions = await context.Transactions
-                     .Where(e => e.User!.UserID == id)
-                     .Select(e => new
-                     {
-                        id = e.TransactionID,
-                        description = e.Description,
-                        value = e.Value,
-                        date = e.Date,
-                        type = e.Type,
-                        category = e.Category
-                     })
-                     .OrderByDescending(e => e.date)
-                     .ToListAsync();
-
-                  if (transactions.Count == 0)
+               List<TransactionModel> allTransactions = new List<TransactionModel>();
+               var transactions = await _context.Transactions
+                  .Where(e => e.User!.UserID == id)
+                  .Select(e => new
                   {
-                     return NoContent();
-                  }
-                  return Ok(transactions);
+                     id = e.TransactionID,
+                     description = e.Description,
+                     value = e.Value,
+                     date = e.Date,
+                     type = e.Type,
+                     category = e.Category
+                  })
+                  .OrderByDescending(e => e.date)
+                  .ToListAsync();
+
+               if (transactions.Count == 0)
+               {
+                  return NoContent();
                }
+               return Ok(transactions);
             }
             return Unauthorized();
          }
@@ -73,28 +76,25 @@ public class TransactionController : ControllerBase
 
             if (payload.TryGetValue("id", out object? idObj) && long.TryParse(idObj.ToString(), out long id))
             {
-               using (var context = new EFDataContext())
-               {
-                  TransactionModel transaction = new TransactionModel();
-                  var transactions = await context.Transactions
-                     .Where(e => e.User!.UserID == id && e.TransactionID == transactionId)
-                     .Select(e => new
-                     {
-                        id = e.TransactionID,
-                        description = e.Description,
-                        value = e.Value,
-                        date = e.Date,
-                        type = e.Type,
-                        category = e.Category
-                     })
-                     .ToListAsync();
-
-                  if (transactions.Count == 0)
+               TransactionModel transaction = new TransactionModel();
+               var transactions = await _context.Transactions
+                  .Where(e => e.User!.UserID == id && e.TransactionID == transactionId)
+                  .Select(e => new
                   {
-                     return NoContent();
-                  }
-                  return Ok(transactions);
+                     id = e.TransactionID,
+                     description = e.Description,
+                     value = e.Value,
+                     date = e.Date,
+                     type = e.Type,
+                     category = e.Category
+                  })
+                  .ToListAsync();
+
+               if (transactions.Count == 0)
+               {
+                  return NoContent();
                }
+               return Ok(transactions);
             }
             return Unauthorized();
          }
@@ -121,29 +121,26 @@ public class TransactionController : ControllerBase
 
             if (payload.TryGetValue("id", out object? idObj) && long.TryParse(idObj.ToString(), out long id))
             {
-               using (var context = new EFDataContext())
-               {
-                  List<TransactionModel> allTransactions = new List<TransactionModel>();
-                  var transactions = await context.Transactions
-                     .Where(e => e.User!.UserID == id && e.Type == "I")
-                     .Select(e => new
-                     {
-                        id = e.TransactionID,
-                        description = e.Description,
-                        value = e.Value,
-                        date = e.Date,
-                        type = e.Type,
-                        category = e.Category
-                     })
-                     .OrderByDescending(e => e.date)
-                     .ToListAsync();
-
-                  if (transactions.Count == 0)
+               List<TransactionModel> allTransactions = new List<TransactionModel>();
+               var transactions = await _context.Transactions
+                  .Where(e => e.User!.UserID == id && e.Type == "I")
+                  .Select(e => new
                   {
-                     return NoContent();
-                  }
-                  return Ok(transactions);
+                     id = e.TransactionID,
+                     description = e.Description,
+                     value = e.Value,
+                     date = e.Date,
+                     type = e.Type,
+                     category = e.Category
+                  })
+                  .OrderByDescending(e => e.date)
+                  .ToListAsync();
+
+               if (transactions.Count == 0)
+               {
+                  return NoContent();
                }
+               return Ok(transactions);
             }
             return Unauthorized();
          }
@@ -169,29 +166,26 @@ public class TransactionController : ControllerBase
 
             if (payload.TryGetValue("id", out object? idObj) && long.TryParse(idObj.ToString(), out long id))
             {
-               using (var context = new EFDataContext())
-               {
-                  List<TransactionModel> allTransactions = new List<TransactionModel>();
-                  var transactions = await context.Transactions
-                     .Where(e => e.User!.UserID == id && e.Type == "E")
-                     .Select(e => new
-                     {
-                        id = e.TransactionID,
-                        description = e.Description,
-                        value = e.Value,
-                        date = e.Date,
-                        type = e.Type,
-                        category = e.Category
-                     })
-                     .OrderByDescending(e => e.date)
-                     .ToListAsync();
-
-                  if (transactions.Count == 0)
+               List<TransactionModel> allTransactions = new List<TransactionModel>();
+               var transactions = await _context.Transactions
+                  .Where(e => e.User!.UserID == id && e.Type == "E")
+                  .Select(e => new
                   {
-                     return NoContent();
-                  }
-                  return Ok(transactions);
+                     id = e.TransactionID,
+                     description = e.Description,
+                     value = e.Value,
+                     date = e.Date,
+                     type = e.Type,
+                     category = e.Category
+                  })
+                  .OrderByDescending(e => e.date)
+                  .ToListAsync();
+
+               if (transactions.Count == 0)
+               {
+                  return NoContent();
                }
+               return Ok(transactions);
             }
             return Unauthorized();
          }
@@ -217,28 +211,25 @@ public class TransactionController : ControllerBase
 
             if (payload.TryGetValue("id", out object? idObj) && long.TryParse(idObj.ToString(), out long id))
             {
-               using (var context = new EFDataContext())
-               {
-                  List<TransactionModel> allTransactions = new List<TransactionModel>();
-                  var transactions = await context.Transactions
-                     .Where(e => e.User!.UserID == id && e.Category!.CategoryID == categoryId)
-                     .Select(e => new
-                     {
-                        id = e.TransactionID,
-                        description = e.Description,
-                        value = e.Value,
-                        date = e.Date,
-                        type = e.Type,
-                        category = e.Category
-                     })
-                     .ToListAsync();
-
-                  if (transactions.Count == 0)
+               List<TransactionModel> allTransactions = new List<TransactionModel>();
+               var transactions = await _context.Transactions
+                  .Where(e => e.User!.UserID == id && e.Category!.CategoryID == categoryId)
+                  .Select(e => new
                   {
-                     return NoContent();
-                  }
-                  return Ok(transactions);
+                     id = e.TransactionID,
+                     description = e.Description,
+                     value = e.Value,
+                     date = e.Date,
+                     type = e.Type,
+                     category = e.Category
+                  })
+                  .ToListAsync();
+
+               if (transactions.Count == 0)
+               {
+                  return NoContent();
                }
+               return Ok(transactions);
             }
             return Unauthorized();
          }
@@ -265,32 +256,29 @@ public class TransactionController : ControllerBase
 
             if (payload.TryGetValue("id", out object? idObj) && long.TryParse(idObj.ToString(), out long id))
             {
-               using (var context = new EFDataContext())
+               var dbUser = await _context.Users.FirstOrDefaultAsync(u => u.UserID == id);
+               var dbCategory = await _context.Categories.FirstOrDefaultAsync(c => c.CategoryID == transaction.CategoryID);
+
+               if (dbUser != null && dbCategory != null)
                {
-                  var dbUser = await context.Users.FirstOrDefaultAsync(u => u.UserID == id);
-                  var dbCategory = await context.Categories.FirstOrDefaultAsync(c => c.CategoryID == transaction.CategoryID);
-
-                  if (dbUser != null && dbCategory != null)
+                  var newTransaction = new TransactionModel
                   {
-                     var newTransaction = new TransactionModel
-                     {
-                        Description = transaction.Description,
-                        Value = transaction.Value,
-                        Type = transaction.Type,
-                        Date = transaction.Date,
-                        User = dbUser,
-                        UserID = dbUser.UserID,
-                        Category = dbCategory,
-                        CategoryID = dbCategory.CategoryID,
-                     };
+                     Description = transaction.Description,
+                     Value = transaction.Value,
+                     Type = transaction.Type,
+                     Date = transaction.Date,
+                     User = dbUser,
+                     UserID = dbUser.UserID,
+                     Category = dbCategory,
+                     CategoryID = dbCategory.CategoryID,
+                  };
 
-                     await context.Transactions.AddAsync(newTransaction);
-                     await context.SaveChangesAsync();
+                  await _context.Transactions.AddAsync(newTransaction);
+                  await _context.SaveChangesAsync();
 
-                     return Ok(newTransaction);
-                  }
-                  return BadRequest();
+                  return Ok(newTransaction);
                }
+               return BadRequest();
             }
             return Unauthorized();
          }
@@ -317,25 +305,22 @@ public class TransactionController : ControllerBase
 
             if (payload.TryGetValue("id", out object? idObj) && long.TryParse(idObj.ToString(), out long id))
             {
-               using (var context = new EFDataContext())
+               var dbTransaction = await _context.Transactions.FirstOrDefaultAsync(t => t.TransactionID == updatedTransaction.TransactionID);
+
+               if (dbTransaction != null && dbTransaction.User!.UserID == id)
                {
-                  var dbTransaction = await context.Transactions.FirstOrDefaultAsync(t => t.TransactionID == updatedTransaction.TransactionID);
+                  dbTransaction.TransactionID = updatedTransaction.TransactionID;
+                  dbTransaction.Description = updatedTransaction.Description;
+                  dbTransaction.Value = updatedTransaction.Value;
+                  dbTransaction.Type = updatedTransaction.Type;
+                  dbTransaction.Date = updatedTransaction.Date;
+                  dbTransaction.Category = updatedTransaction.Category;
 
-                  if (dbTransaction != null && dbTransaction.User!.UserID == id)
-                  {
-                     dbTransaction.TransactionID = updatedTransaction.TransactionID;
-                     dbTransaction.Description = updatedTransaction.Description;
-                     dbTransaction.Value = updatedTransaction.Value;
-                     dbTransaction.Type = updatedTransaction.Type;
-                     dbTransaction.Date = updatedTransaction.Date;
-                     dbTransaction.Category = updatedTransaction.Category;
+                  await _context.SaveChangesAsync();
 
-                     await context.SaveChangesAsync();
-
-                     return Ok(dbTransaction);
-                  }
-                  return NotFound();
+                  return Ok(dbTransaction);
                }
+               return NotFound();
             }
             return Unauthorized();
          }
@@ -362,19 +347,16 @@ public class TransactionController : ControllerBase
 
             if (payload.TryGetValue("id", out object? idObj) && long.TryParse(idObj.ToString(), out long id))
             {
-               using (var context = new EFDataContext())
+               var dbTransaction = await _context.Transactions.FirstOrDefaultAsync(t => t.TransactionID == transactionId);
+
+               if (dbTransaction != null && dbTransaction.User!.UserID == id)
                {
-                  var dbTransaction = await context.Transactions.FirstOrDefaultAsync(t => t.TransactionID == transactionId);
+                  _context.Transactions.Remove(dbTransaction);
+                  await _context.SaveChangesAsync();
 
-                  if (dbTransaction != null && dbTransaction.User!.UserID == id)
-                  {
-                     context.Transactions.Remove(dbTransaction);
-                     await context.SaveChangesAsync();
-
-                     return Ok();
-                  }
-                  return NotFound();
+                  return Ok();
                }
+               return NotFound();
             }
             return Unauthorized();
          }

@@ -1,9 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using System.IdentityModel.Tokens.Jwt;
-using Microsoft.EntityFrameworkCore;
-using PersonalFinances.DataContext;
-
 using PersonalFinances.Models;
+using PersonalFinances.Services;
 
 namespace PersonalFinances.Controllers;
 
@@ -11,35 +8,26 @@ namespace PersonalFinances.Controllers;
 [ApiController]
 public class CategoriesController : ControllerBase
 {
+   private readonly ICategoryService _categoryService;
+
+   public CategoriesController(ICategoryService categoryService)
+   {
+      _categoryService = categoryService;
+   }
+
    [HttpGet]
-   public async Task<ActionResult<IEnumerable<object>>> ListAllCategories()
+   public async Task<ActionResult<IEnumerable<CategoryModel>>> ListAllCategories()
    {
       try
       {
-         if (HttpContext.Request.Headers["Authorization"] != String.Empty)
+         var categories = await _categoryService.GetAllCategories();
+
+         if (categories.Count == 0)
          {
-            var token = HttpContext.Request.Headers["Authorization"];
-
-            var jwtToken = new JwtSecurityToken(token);
-            var payload = jwtToken.Payload;
-
-            if (payload.TryGetValue("id", out object? idObj) && long.TryParse(idObj.ToString(), out long id))
-            {
-               using (var context = new EFDataContext())
-               {
-                  List<CategoryModel> allCategories = new List<CategoryModel>();
-                  var categories = await context.Categories.ToListAsync();
-
-                  if (categories.Count == 0)
-                  {
-                     return NoContent();
-                  }
-                  return Ok(categories);
-               }
-            }
-            return Unauthorized();
+            return NoContent();
          }
-         return Unauthorized();
+
+         return Ok(categories);
       }
       catch (Exception ex)
       {
@@ -49,43 +37,18 @@ public class CategoriesController : ControllerBase
    }
 
    [HttpGet("income")]
-   public async Task<ActionResult<IEnumerable<object>>> ListAllIncomeCategories()
+   public async Task<ActionResult<IEnumerable<CategoryModel>>> ListAllIncomeCategories()
    {
       try
       {
-         if (HttpContext.Request.Headers["Authorization"] != String.Empty)
+         var incomeCategories = await _categoryService.GetIncomeCategories();
+
+         if (incomeCategories.Count == 0)
          {
-            var token = HttpContext.Request.Headers["Authorization"];
-
-            var jwtToken = new JwtSecurityToken(token);
-            var payload = jwtToken.Payload;
-
-            if (payload.TryGetValue("id", out object? idObj) && long.TryParse(idObj.ToString(), out long id))
-            {
-               using (var context = new EFDataContext())
-               {
-                  List<CategoryModel> categories = new List<CategoryModel>();
-                  var incomeCategories = await context.Categories
-                     .Where(c => c.Type == "I")
-                     .Select(c => new
-                     {
-                        id = c.CategoryID,
-                        name = c.Name,
-                        description = c.Description,
-                        type = c.Type
-                     })
-                     .ToListAsync();
-
-                  if (incomeCategories.Count == 0)
-                  {
-                     return NoContent();
-                  }
-                  return Ok(incomeCategories);
-               }
-            }
-            return Unauthorized();
+            return NoContent();
          }
-         return Unauthorized();
+
+         return Ok(incomeCategories);
       }
       catch (Exception ex)
       {
@@ -93,44 +56,20 @@ public class CategoriesController : ControllerBase
          return StatusCode(500, new { error = ex.Message });
       }
    }
+
    [HttpGet("expenses")]
-   public async Task<ActionResult<IEnumerable<object>>> ListAllExpensesCategories()
+   public async Task<ActionResult<IEnumerable<CategoryModel>>> ListAllExpensesCategories()
    {
       try
       {
-         if (HttpContext.Request.Headers["Authorization"] != String.Empty)
+         var expensesCategories = await _categoryService.GetExpensesCategories();
+
+         if (expensesCategories.Count == 0)
          {
-            var token = HttpContext.Request.Headers["Authorization"];
-
-            var jwtToken = new JwtSecurityToken(token);
-            var payload = jwtToken.Payload;
-
-            if (payload.TryGetValue("id", out object? idObj) && long.TryParse(idObj.ToString(), out long id))
-            {
-               using (var context = new EFDataContext())
-               {
-                  List<CategoryModel> categories = new List<CategoryModel>();
-                  var expensesCategories = await context.Categories
-                     .Where(c => c.Type == "E")
-                     .Select(c => new
-                     {
-                        id = c.CategoryID,
-                        name = c.Name,
-                        description = c.Description,
-                        type = c.Type
-                     })
-                     .ToListAsync();
-
-                  if (expensesCategories.Count == 0)
-                  {
-                     return NoContent();
-                  }
-                  return Ok(expensesCategories);
-               }
-            }
-            return Unauthorized();
+            return NoContent();
          }
-         return Unauthorized();
+
+         return Ok(expensesCategories);
       }
       catch (Exception ex)
       {

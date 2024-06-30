@@ -1,9 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using PersonalFinances.DataContext;
 using PersonalFinances.Models;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace PersonalFinances.Services;
 
