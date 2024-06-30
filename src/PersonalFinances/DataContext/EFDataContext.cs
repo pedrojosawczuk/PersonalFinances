@@ -99,7 +99,7 @@ public class EFDataContext : DbContext
 
 			base.OnModelCreating(modelBuilder);
 		}
-		catch (Exception ex)
+		catch (Exception)
 		{
 		}
 	}
