@@ -1,10 +1,12 @@
 using PersonalFinances.Models;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace PersonalFinances.Services;
 
 public interface ICategoryService
 {
-   List<TransactionModel> ListAllCategories(string token);
-   List<TransactionModel> ListAllIncomeCategories(string token);
-   List<TransactionModel> ListAllExpensesCategories(string token);
+   Task<List<CategoryModel>> GetAllCategories();
+   Task<List<CategoryModel>> GetIncomeCategories();
+   Task<List<CategoryModel>> GetExpensesCategories();
 }
