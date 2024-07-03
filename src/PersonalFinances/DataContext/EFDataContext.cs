@@ -56,9 +56,9 @@ public class EFDataContext : DbContext
 				entity.Property(e => e.Password).HasColumnName("password");
 				entity.Property(e => e.Photo).HasColumnName("photo");
 				entity.HasMany(e => e.Transactions)
-					 .WithOne(t => t.User)
-					 .HasForeignKey(t => t.UserID)
-					 .OnDelete(DeleteBehavior.Cascade);
+					.WithOne(t => t.User)
+					.HasForeignKey(t => t.UserID)
+					.OnDelete(DeleteBehavior.Cascade);
 			});
 
 			modelBuilder.Entity<CategoryModel>(entity =>
@@ -87,14 +87,14 @@ public class EFDataContext : DbContext
 				entity.Property(e => e.CategoryID).HasColumnName("fk_category");
 
 				entity.HasOne(e => e.User)
-					 .WithMany(u => u.Transactions)
-					 .HasForeignKey(e => e.UserID)
-					 .OnDelete(DeleteBehavior.Cascade);
+					.WithMany(u => u.Transactions)
+					.HasForeignKey(e => e.UserID)
+					.OnDelete(DeleteBehavior.Cascade);
 
 				entity.HasOne(e => e.Category)
-					 .WithMany(c => c.Transactions)
-					 .HasForeignKey(e => e.CategoryID)
-					 .OnDelete(DeleteBehavior.Restrict);
+					.WithMany(c => c.Transactions)
+					.HasForeignKey(e => e.CategoryID)
+					.OnDelete(DeleteBehavior.Restrict);
 			});
 
 			base.OnModelCreating(modelBuilder);

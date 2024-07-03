@@ -11,5 +11,6 @@ public interface IUserService
 	Task SaveChangesAsync();
 	Task DeleteUser(UserModel user);
 	string GenerateJwtToken(UserModel user);
+	bool ValidateJwtToken(string token);
 	bool IsEmailValid(string email);
 }

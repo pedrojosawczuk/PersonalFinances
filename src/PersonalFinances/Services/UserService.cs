@@ -12,6 +12,7 @@ namespace PersonalFinances.Services
 	public class UserService : IUserService
 	{
 		private readonly EFDataContext _context;
+		private readonly string _key = "cafecafecafecafecafecafecafecafecafecafecafecafecafecafecafecafecafecafecafecafecafecafecafecafe";
 
 		public UserService(EFDataContext context)
 		{
@@ -55,7 +56,7 @@ namespace PersonalFinances.Services
 		public string GenerateJwtToken(UserModel user)
 		{
 			var tokenHandler = new JwtSecurityTokenHandler();
-			var key = Encoding.ASCII.GetBytes("cafecafecafecafecafecafecafecafecafecafecafecafecafecafecafecafecafecafecafecafecafecafecafecafe");
+			var key = Encoding.ASCII.GetBytes(_key);
 
 			var tokenDescriptor = new SecurityTokenDescriptor
 			{
@@ -72,6 +73,30 @@ namespace PersonalFinances.Services
 
 			var token = tokenHandler.CreateToken(tokenDescriptor);
 			return tokenHandler.WriteToken(token);
+		}
+		public bool ValidateJwtToken(string token)
+		{
+			var tokenHandler = new JwtSecurityTokenHandler();
+			var key = Encoding.ASCII.GetBytes(_key);
+
+			try
+			{
+				tokenHandler.ValidateToken(token, new TokenValidationParameters
+				{
+					ValidateIssuerSigningKey = true,
+					IssuerSigningKey = new SymmetricSecurityKey(key),
+					ValidateIssuer = false,
+					ValidateAudience = false,
+					// Define um tempo máximo de tolerância para tokens expirados
+					ClockSkew = TimeSpan.Zero
+				}, out SecurityToken validatedToken);
+
+				return true;
+			}
+			catch
+			{
+				return false;
+			}
 		}
 
 		public bool IsEmailValid(string email)
