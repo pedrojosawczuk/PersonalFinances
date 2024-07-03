@@ -11,6 +11,6 @@ public class UserModel
 	public string? Password { get; set; } = string.Empty;
 	public byte[]? Photo;
 	
-	[JsonIgnore]
-	public ICollection<TransactionModel> Transactions { get; set; } = new List<TransactionModel>();
+	// [JsonIgnore]
+	// public ICollection<TransactionModel> Transactions { get; set; } = new List<TransactionModel>();
 }

@@ -9,6 +9,6 @@ public class CategoryModel
 	public string Description { get; set; } = string.Empty;
 	public string Type { get; set; } = string.Empty;
 	
-	[JsonIgnore]
-	public ICollection<TransactionModel> Transactions { get; set; } = new List<TransactionModel>();
+	// [JsonIgnore]
+	// public ICollection<TransactionModel> Transactions { get; set; } = new List<TransactionModel>();
 }
